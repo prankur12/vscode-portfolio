@@ -1,13 +1,33 @@
-import ArticleCard from '../components/ArticleCard';
-import styles from '../styles/ArticlesPage.module.css';
+import { useEffect, useState } from "react";
+import ArticleCard from "../components/ArticleCard";
+import styles from "../styles/ArticlesPage.module.css";
+import axios from "axios";
 
-const ArticlesPage = ({ articles }) => {
+const ArticlesPage = () => {
+  const [articles, setArticles] = useState([]);
+  console.log("🚀 ~ file: articles.jsx:8 ~ ArticlesPage ~ articles:", articles);
+
+  async function fetchArticles() {
+    try {
+      const blogs = await axios.get(
+        "https://dev.to/api/articles?username=prankurpandeyy"
+      );
+
+      setArticles(blogs.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    fetchArticles();
+  }, []);
   return (
     <>
       <h3>
-        Recent Posts from{' '}
+        Recent Posts from{" "}
         <a
-          href="https://dev.to/itsnitinr"
+          href="https://dev.to/prankurpandeyy"
           target="_blank"
           rel="noopener"
           className={styles.underline}
@@ -16,30 +36,13 @@ const ArticlesPage = ({ articles }) => {
         </a>
       </h3>
       <div className={styles.container}>
-        {articles.map((article) => (
-          <ArticleCard key={article.id} article={article} />
-        ))}
+        {articles &&
+          articles.map((article) => (
+            <ArticleCard key={article.id} article={article} />
+          ))}
       </div>
     </>
   );
 };
-
-export async function getStaticProps() {
-  const res = await fetch(
-    'https://dev.to/api/articles/me/published?per_page=6',
-    {
-      headers: {
-        'api-key': process.env.DEV_TO_API_KEY,
-      },
-    }
-  );
-
-  const data = await res.json();
-
-  return {
-    props: { title: 'Articles', articles: data },
-    revalidate: 60,
-  };
-}
 
 export default ArticlesPage;

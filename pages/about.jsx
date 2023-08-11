@@ -1,14 +1,17 @@
 const AboutPage = () => {
   return (
     <>
-      <h3>A Little Bit About Me</h3>
+      <h3>
+        A Software Developer who is deeply interested in building world class
+        products making huge impact on everyone.{" "}
+      </h3>
     </>
   );
 };
 
 export async function getStaticProps() {
   return {
-    props: { title: 'About' },
+    props: { title: "About" },
   };
 }
 
